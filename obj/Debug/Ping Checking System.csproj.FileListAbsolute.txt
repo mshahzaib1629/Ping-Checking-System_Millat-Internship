@@ -1,0 +1,10 @@
+C:\Users\Shahzaib\source\repos\Ping Checking System\Ping Checking System\bin\Debug\Ping Checking System.exe.config
+C:\Users\Shahzaib\source\repos\Ping Checking System\Ping Checking System\bin\Debug\Ping Checking System.exe
+C:\Users\Shahzaib\source\repos\Ping Checking System\Ping Checking System\bin\Debug\Ping Checking System.pdb
+C:\Users\Shahzaib\source\repos\Ping Checking System\Ping Checking System\obj\Debug\Ping Checking System.csprojAssemblyReference.cache
+C:\Users\Shahzaib\source\repos\Ping Checking System\Ping Checking System\obj\Debug\Ping_Checking_System.Form1.resources
+C:\Users\Shahzaib\source\repos\Ping Checking System\Ping Checking System\obj\Debug\Ping_Checking_System.Properties.Resources.resources
+C:\Users\Shahzaib\source\repos\Ping Checking System\Ping Checking System\obj\Debug\Ping Checking System.csproj.GenerateResource.cache
+C:\Users\Shahzaib\source\repos\Ping Checking System\Ping Checking System\obj\Debug\Ping Checking System.csproj.CoreCompileInputs.cache
+C:\Users\Shahzaib\source\repos\Ping Checking System\Ping Checking System\obj\Debug\Ping Checking System.exe
+C:\Users\Shahzaib\source\repos\Ping Checking System\Ping Checking System\obj\Debug\Ping Checking System.pdb
