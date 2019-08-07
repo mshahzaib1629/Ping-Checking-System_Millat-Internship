@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.button1 = new System.Windows.Forms.Button();
@@ -41,6 +42,7 @@
             this.label6 = new System.Windows.Forms.Label();
             this.textBox5 = new System.Windows.Forms.TextBox();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
+            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -50,7 +52,6 @@
             this.textBox1.Name = "textBox1";
             this.textBox1.Size = new System.Drawing.Size(73, 22);
             this.textBox1.TabIndex = 0;
-            this.textBox1.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
             // 
             // label1
             // 
@@ -141,7 +142,6 @@
             this.label6.Size = new System.Drawing.Size(22, 17);
             this.label6.TabIndex = 12;
             this.label6.Text = "to";
-            this.label6.Click += new System.EventHandler(this.label6_Click);
             // 
             // textBox5
             // 
@@ -156,14 +156,20 @@
             this.dataGridView1.Location = new System.Drawing.Point(33, 246);
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.RowTemplate.Height = 24;
-            this.dataGridView1.Size = new System.Drawing.Size(486, 178);
+            this.dataGridView1.Size = new System.Drawing.Size(486, 231);
             this.dataGridView1.TabIndex = 13;
+            // 
+            // contextMenuStrip1
+            // 
+            this.contextMenuStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
+            this.contextMenuStrip1.Name = "contextMenuStrip1";
+            this.contextMenuStrip1.Size = new System.Drawing.Size(67, 4);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(542, 450);
+            this.ClientSize = new System.Drawing.Size(553, 504);
             this.Controls.Add(this.dataGridView1);
             this.Controls.Add(this.label6);
             this.Controls.Add(this.textBox5);
@@ -200,6 +206,7 @@
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.TextBox textBox5;
         private System.Windows.Forms.DataGridView dataGridView1;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
     }
 }
 

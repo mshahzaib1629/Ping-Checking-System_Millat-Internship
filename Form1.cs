@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Linq;
 using System.Net.NetworkInformation;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -13,9 +14,20 @@ namespace Ping_Checking_System
 {
     public partial class Form1 : Form
     {
+
+        String defaultIP;
+        int startingIndex;
+        int endingIndex;
+        
+        DataTable table = new DataTable();
+
+
         public Form1()
         {
             InitializeComponent();
+            table.Columns.Add("IP Address");
+            table.Columns.Add("Status");
+            table.Columns.Add("TimeOut");
         }
 
         private void label1_Click(object sender, EventArgs e)
@@ -25,37 +37,35 @@ namespace Ping_Checking_System
 
         private void button1_Click(object sender, EventArgs e)
         {
-
-            String defaultIP = textBox1.Text + "." + textBox2.Text + "." + textBox3.Text + ".";
-            int startingIndex = int.Parse(textBox4.Text);
-            int endingIndex = int.Parse(textBox5.Text);
-
-            Ping ping = new Ping();
-
-            DataTable table = new DataTable();
-            table.Columns.Add("IP Address");
-            table.Columns.Add("Status");
-            table.Columns.Add("TimeOut");
-
-            dataGridView1.DataSource = table;
-
-            for (int i = startingIndex; i <= endingIndex; i++)
+            defaultIP = textBox1.Text + "." + textBox2.Text + "." + textBox3.Text + ".";
+            startingIndex = int.Parse(textBox4.Text);
+            endingIndex = int.Parse(textBox5.Text);
+         
+            for(int i=startingIndex; i<=endingIndex; i++)
             {
-                PingReply pingReply = ping.Send(defaultIP + i, 10000);
+                pingingOnTheWay(defaultIP + i);
+            }
+            
+        }
 
-                table.Rows.Add(defaultIP + i, pingReply.Status.ToString(), pingReply.RoundtripTime.ToString());
-                
+        
+        private void pingingOnTheWay(String ip)
+        {
+
+            Thread thread = new Thread(() => this.BeginInvoke((Action)delegate ()
+            {
+                Ping ping = new Ping();
+                PingReply pingReply = ping.Send(ip, 5000);
+
+                table.Rows.Add(ip, pingReply.Status.ToString(), pingReply.RoundtripTime.ToString());
+                dataGridView1.DataSource = table;
+                Console.WriteLine(DateTime.Now.TimeOfDay + " \t" + ip + " \t" + pingReply.Status.ToString() + " \t" + pingReply.RoundtripTime.ToString());
+
+            }));
+            thread.Start();
+
             }
         }
 
-        private void label6_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void textBox1_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-    }
+  
 }
