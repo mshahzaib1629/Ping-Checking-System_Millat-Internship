@@ -43,12 +43,13 @@
             this.textBox5 = new System.Windows.Forms.TextBox();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.label7 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.SuspendLayout();
             // 
             // textBox1
             // 
-            this.textBox1.Location = new System.Drawing.Point(33, 106);
+            this.textBox1.Location = new System.Drawing.Point(98, 68);
             this.textBox1.Name = "textBox1";
             this.textBox1.Size = new System.Drawing.Size(73, 22);
             this.textBox1.TabIndex = 0;
@@ -56,16 +57,15 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(30, 76);
+            this.label1.Location = new System.Drawing.Point(95, 38);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(114, 17);
             this.label1.TabIndex = 1;
             this.label1.Text = "Enter IP Address";
-            this.label1.Click += new System.EventHandler(this.label1_Click);
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(341, 151);
+            this.button1.Location = new System.Drawing.Point(406, 113);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(178, 31);
             this.button1.TabIndex = 2;
@@ -84,7 +84,7 @@
             // 
             // textBox2
             // 
-            this.textBox2.Location = new System.Drawing.Point(134, 106);
+            this.textBox2.Location = new System.Drawing.Point(199, 68);
             this.textBox2.Name = "textBox2";
             this.textBox2.Size = new System.Drawing.Size(73, 22);
             this.textBox2.TabIndex = 5;
@@ -93,7 +93,7 @@
             // 
             this.label3.AutoSize = true;
             this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label3.Location = new System.Drawing.Point(110, 98);
+            this.label3.Location = new System.Drawing.Point(175, 60);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(18, 25);
             this.label3.TabIndex = 6;
@@ -103,7 +103,7 @@
             // 
             this.label4.AutoSize = true;
             this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label4.Location = new System.Drawing.Point(212, 98);
+            this.label4.Location = new System.Drawing.Point(277, 60);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(18, 25);
             this.label4.TabIndex = 8;
@@ -111,7 +111,7 @@
             // 
             // textBox3
             // 
-            this.textBox3.Location = new System.Drawing.Point(236, 106);
+            this.textBox3.Location = new System.Drawing.Point(301, 68);
             this.textBox3.Name = "textBox3";
             this.textBox3.Size = new System.Drawing.Size(73, 22);
             this.textBox3.TabIndex = 7;
@@ -120,7 +120,7 @@
             // 
             this.label5.AutoSize = true;
             this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label5.Location = new System.Drawing.Point(317, 98);
+            this.label5.Location = new System.Drawing.Point(382, 60);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(18, 25);
             this.label5.TabIndex = 10;
@@ -128,7 +128,7 @@
             // 
             // textBox4
             // 
-            this.textBox4.Location = new System.Drawing.Point(341, 106);
+            this.textBox4.Location = new System.Drawing.Point(406, 68);
             this.textBox4.Name = "textBox4";
             this.textBox4.Size = new System.Drawing.Size(73, 22);
             this.textBox4.TabIndex = 9;
@@ -137,7 +137,7 @@
             // 
             this.label6.AutoSize = true;
             this.label6.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label6.Location = new System.Drawing.Point(420, 109);
+            this.label6.Location = new System.Drawing.Point(485, 71);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(22, 17);
             this.label6.TabIndex = 12;
@@ -145,7 +145,7 @@
             // 
             // textBox5
             // 
-            this.textBox5.Location = new System.Drawing.Point(446, 106);
+            this.textBox5.Location = new System.Drawing.Point(511, 68);
             this.textBox5.Name = "textBox5";
             this.textBox5.Size = new System.Drawing.Size(73, 22);
             this.textBox5.TabIndex = 11;
@@ -156,7 +156,7 @@
             this.dataGridView1.Location = new System.Drawing.Point(33, 246);
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.RowTemplate.Height = 24;
-            this.dataGridView1.Size = new System.Drawing.Size(486, 231);
+            this.dataGridView1.Size = new System.Drawing.Size(626, 304);
             this.dataGridView1.TabIndex = 13;
             // 
             // contextMenuStrip1
@@ -165,11 +165,20 @@
             this.contextMenuStrip1.Name = "contextMenuStrip1";
             this.contextMenuStrip1.Size = new System.Drawing.Size(67, 4);
             // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(119, 211);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(0, 17);
+            this.label7.TabIndex = 14;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(553, 504);
+            this.ClientSize = new System.Drawing.Size(698, 581);
+            this.Controls.Add(this.label7);
             this.Controls.Add(this.dataGridView1);
             this.Controls.Add(this.label6);
             this.Controls.Add(this.textBox5);
@@ -207,6 +216,7 @@
         private System.Windows.Forms.TextBox textBox5;
         private System.Windows.Forms.DataGridView dataGridView1;
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
+        private System.Windows.Forms.Label label7;
     }
 }
 
