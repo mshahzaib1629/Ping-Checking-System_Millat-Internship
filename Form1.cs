@@ -22,6 +22,7 @@ namespace Ping_Checking_System
         
         DataTable table = new DataTable();
         int countSuccess = 0;
+        TimeSpan ping_timeElapsed;
 
         public Form1()
         {
@@ -33,7 +34,7 @@ namespace Ping_Checking_System
         }
         
 
-        private void button1_Click(object sender, EventArgs e)
+        private void button1_Click_1(object sender, EventArgs e)
         {
             countSuccess = 0;
             table.Clear();
@@ -41,14 +42,17 @@ namespace Ping_Checking_System
             startingIndex = int.Parse(textBox4.Text);
             endingIndex = int.Parse(textBox5.Text);
 
+            Stopwatch stopwatch = new Stopwatch();
+
             List<Task> tasks = new List<Task>();
-            
+            stopwatch.Start();
             for(int i=startingIndex; i<=endingIndex; i++)
             {
                Task currentTask = pingingOnTheWay(defaultIP + i);
             tasks.Add(currentTask);
             }
-            
+            stopwatch.Stop();
+            ping_timeElapsed = stopwatch.Elapsed;
         }
 
         
@@ -64,23 +68,25 @@ namespace Ping_Checking_System
                 table.Rows.Add(DateTime.Now.TimeOfDay, ip, pingReply.Status.ToString(), pingReply.RoundtripTime.ToString());
                 dataGridView1.DataSource = table;
                 label7.Text = "Successful Pings: " + countSuccess;
+                label10.Text = "Time Elapsed: " + ping_timeElapsed.ToString();
                 Console.WriteLine(DateTime.Now.TimeOfDay + " \t" + ip + " \t" + pingReply.Status.ToString() + " \t" + pingReply.RoundtripTime.ToString());
                 Console.WriteLine("Successful Pings: " + countSuccess);
             }
 
         private void button2_Click(object sender, EventArgs e)
         {
+            listBox1.Items.Clear();
             // -------------------- Parameters used for Route Trace -----------------------
             string hostname = textBox6.Text;
             int timeOut = 1000; // 1000ms or 1 second
-            int max_ttl = 30; //max number of servers allowed to be found
+            int max_ttl = Int32.Parse(textBox7.Text); //max number of servers allowed to be found
             const int bufferSize = 32;
             
             traceOut(hostname, timeOut, max_ttl, bufferSize);
            
         }
 
-        private void traceOut(String hostname, int timeOut, int max_ttl, int bufferSize)
+        private async void traceOut(String hostname, int timeOut, int max_ttl, int bufferSize)
         {
             int current_ttl = 0; //used for tracking how many servers have been found.
             Stopwatch s1 = new Stopwatch();
@@ -90,8 +96,7 @@ namespace Ping_Checking_System
             new Random().NextBytes(buffer);
 
             Ping pinger = new Ping();
-            Task.Factory.StartNew(() => this.BeginInvoke((Action)delegate ()
-            {
+            
                 WriteListBox($"Started ICMP Trace route on {hostname}");
                 for (int ttl = 1; ttl <= max_ttl; ttl++)
                 {
@@ -102,7 +107,7 @@ namespace Ping_Checking_System
                     PingReply reply = null;
                     try
                     {
-                        reply = pinger.Send(hostname, timeOut, buffer, options);
+                        reply = await pinger.SendPingAsync(hostname, timeOut, buffer, options);
                     }
                     catch
                     {
@@ -134,7 +139,7 @@ namespace Ping_Checking_System
                     }
                     break;
                 }
-            }));
+            
         }
 
         private void WriteListBox(String text)
@@ -142,6 +147,8 @@ namespace Ping_Checking_System
             Console.WriteLine(text);
             listBox1.Items.Add(text);
         }
+
+        
     }
 
   
