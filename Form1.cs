@@ -10,6 +10,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Diagnostics;
+using System.Net;
 
 namespace Ping_Checking_System
 {
@@ -19,6 +20,8 @@ namespace Ping_Checking_System
         String defaultIP;
         int startingIndex;
         int endingIndex;
+
+        bool ipTraceActive = true;
         
         DataTable table = new DataTable();
         int countSuccess = 0;
@@ -78,10 +81,11 @@ namespace Ping_Checking_System
             listBox1.Items.Clear();
             // -------------------- Parameters used for Route Trace -----------------------
             string hostname = textBox6.Text;
-            int timeOut = 1000; // 1000ms or 1 second
+            int timeOut = int.Parse( textBox8.Text ); // 1000ms or 1 second
             int max_ttl = Int32.Parse(textBox7.Text); //max number of servers allowed to be found
             const int bufferSize = 32;
             
+            ipTraceActive = true;
             traceOut(hostname, timeOut, max_ttl, bufferSize);
            
         }
@@ -99,6 +103,9 @@ namespace Ping_Checking_System
             
                 WriteListBox($"Started ICMP Trace route on {hostname}");
                 for (int ttl = 1; ttl <= max_ttl; ttl++)
+                {
+
+                if (ipTraceActive)
                 {
                     current_ttl++;
                     s1.Start();
@@ -139,6 +146,13 @@ namespace Ping_Checking_System
                     }
                     break;
                 }
+                else
+                {
+
+                    WriteListBox("Tracing Stopped! Sorry for Missing Results");
+                    break;
+                }
+                }
             
         }
 
@@ -148,7 +162,11 @@ namespace Ping_Checking_System
             listBox1.Items.Add(text);
         }
 
-        
+        private void button3_Click(object sender, EventArgs e)
+        {
+            ipTraceActive = false;
+        }
+
     }
 
   
