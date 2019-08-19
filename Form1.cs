@@ -61,18 +61,41 @@ namespace Ping_Checking_System
         
         private async Task pingingOnTheWay(String ip)
         {
-            
-                Ping ping = new Ping();
-                PingReply pingReply = await ping.SendPingAsync(ip, 5000);
+            int countCurrentSuccess = 0;
+            long currentRoundTripTime = 0;
+            MyPIng currentPing = new MyPIng();
+            currentPing.Ip = ip;
 
-                if (pingReply.Status == IPStatus.Success)
+            for (int i = 0; i < 4; i++)
+            {
+                Ping ping = new Ping();
+                PingReply pingReplyTest = await ping.SendPingAsync(ip, 5000);
+                currentRoundTripTime += pingReplyTest.RoundtripTime;
+
+                Console.WriteLine(DateTime.Now.TimeOfDay + " \t" + ip + " \t" + pingReplyTest.Status.ToString() + " \t" + pingReplyTest.RoundtripTime.ToString());
+                
+                    if (pingReplyTest.Status == IPStatus.Success)
+                {
+                    countCurrentSuccess++;
+                }
+                if (countCurrentSuccess == 4)
+                {
+                    currentPing.Status = IPStatus.Success;
+                }
+                else
+                    currentPing.Status = pingReplyTest.Status;
+            }
+            currentPing.TimeOut = currentRoundTripTime;
+
+                if (currentPing.Status == IPStatus.Success)
                     countSuccess++;
 
-                table.Rows.Add(DateTime.Now.TimeOfDay, ip, pingReply.Status.ToString(), pingReply.RoundtripTime.ToString());
+                table.Rows.Add(DateTime.Now.TimeOfDay, ip, currentPing.Status.ToString(), currentPing.TimeOut.ToString());
                 dataGridView1.DataSource = table;
                 label7.Text = "Successful Pings: " + countSuccess;
                 label10.Text = "Time Elapsed: " + ping_timeElapsed.ToString();
-                Console.WriteLine(DateTime.Now.TimeOfDay + " \t" + ip + " \t" + pingReply.Status.ToString() + " \t" + pingReply.RoundtripTime.ToString());
+
+                Console.WriteLine(DateTime.Now.TimeOfDay + " \t" + ip + " \t" + currentPing.Status.ToString() + " \t" + currentPing.TimeOut.ToString());
                 Console.WriteLine("Successful Pings: " + countSuccess);
             }
 
