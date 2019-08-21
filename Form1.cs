@@ -10,6 +10,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Diagnostics;
+using System.Net;
 
 namespace Ping_Checking_System
 {
@@ -19,6 +20,8 @@ namespace Ping_Checking_System
         String defaultIP;
         int startingIndex;
         int endingIndex;
+
+        bool ipTraceActive = true;
         
         DataTable table = new DataTable();
         int countSuccess = 0;
@@ -30,7 +33,7 @@ namespace Ping_Checking_System
             table.Columns.Add("Reporting Time");
             table.Columns.Add("IP Address");
             table.Columns.Add("Status");
-            table.Columns.Add("TimeOut");
+            table.Columns.Add("RoundTripTime (ms)");
         }
         
 
@@ -42,34 +45,53 @@ namespace Ping_Checking_System
             startingIndex = int.Parse(textBox4.Text);
             endingIndex = int.Parse(textBox5.Text);
 
+            int accuracyLevel = int.Parse(textBox9.Text);
+            int timeOut = int.Parse(textBox11.Text);
+
             Stopwatch stopwatch = new Stopwatch();
 
-            List<Task> tasks = new List<Task>();
             stopwatch.Start();
-            for(int i=startingIndex; i<=endingIndex; i++)
+            for (int i=startingIndex; i<=endingIndex; i++)
             {
-               Task currentTask = pingingOnTheWay(defaultIP + i);
-            tasks.Add(currentTask);
+               pingingOnTheWay(defaultIP + i, accuracyLevel, timeOut);
             }
             stopwatch.Stop();
             ping_timeElapsed = stopwatch.Elapsed;
         }
 
         
-        private async Task pingingOnTheWay(String ip)
+        private async Task pingingOnTheWay(String ip, int accuracyLevel, int timeOut)
         {
-            
-                Ping ping = new Ping();
-                PingReply pingReply = await ping.SendPingAsync(ip, 5000);
 
-                if (pingReply.Status == IPStatus.Success)
+            long currentRoundTripTime = 0;
+            MyPIng currentPing = new MyPIng();
+            List<IPStatus> replyTestResults = new List<IPStatus>();
+            currentPing.Ip = ip;
+
+            Ping ping = new Ping();
+
+            for (int i = 0; i < int.Parse(textBox9.Text); i++)
+            {
+                
+                PingReply pingReplyTest = await ping.SendPingAsync(ip, timeOut);
+                currentRoundTripTime += pingReplyTest.RoundtripTime;
+                replyTestResults.Add(pingReplyTest.Status);
+
+                Console.WriteLine(ip + " \t" + pingReplyTest.Status.ToString() + " \t" + pingReplyTest.RoundtripTime.ToString());
+            }
+
+            currentPing.Status = mode(replyTestResults);
+            currentPing.RoundTripTime = currentRoundTripTime;
+
+                if (currentPing.Status == IPStatus.Success)
                     countSuccess++;
 
-                table.Rows.Add(DateTime.Now.TimeOfDay, ip, pingReply.Status.ToString(), pingReply.RoundtripTime.ToString());
+                table.Rows.Add(DateTime.Now.TimeOfDay, ip, currentPing.Status.ToString(), currentPing.RoundTripTime.ToString());
                 dataGridView1.DataSource = table;
                 label7.Text = "Successful Pings: " + countSuccess;
                 label10.Text = "Time Elapsed: " + ping_timeElapsed.ToString();
-                Console.WriteLine(DateTime.Now.TimeOfDay + " \t" + ip + " \t" + pingReply.Status.ToString() + " \t" + pingReply.RoundtripTime.ToString());
+
+                Console.WriteLine(ip + " \t" + currentPing.Status.ToString() + " \t" + currentPing.RoundTripTime.ToString());
                 Console.WriteLine("Successful Pings: " + countSuccess);
             }
 
@@ -78,15 +100,17 @@ namespace Ping_Checking_System
             listBox1.Items.Clear();
             // -------------------- Parameters used for Route Trace -----------------------
             string hostname = textBox6.Text;
-            int timeOut = 1000; // 1000ms or 1 second
-            int max_ttl = Int32.Parse(textBox7.Text); //max number of servers allowed to be found
+            int timeOut = int.Parse( textBox8.Text );
+            int max_ttl = Int32.Parse( textBox7.Text ); //max number of servers allowed to be found
+            int accuracyLevel = int.Parse(textBox10.Text);  // no. of iterations of sending ping per ip
             const int bufferSize = 32;
             
-            traceOut(hostname, timeOut, max_ttl, bufferSize);
+            ipTraceActive = true;
+            traceOut(hostname, accuracyLevel, timeOut, max_ttl, bufferSize);
            
         }
 
-        private async void traceOut(String hostname, int timeOut, int max_ttl, int bufferSize)
+        private async void traceOut(String hostname, int accuracyLevel, int timeOut, int max_ttl, int bufferSize)
         {
             int current_ttl = 0; //used for tracking how many servers have been found.
             Stopwatch s1 = new Stopwatch();
@@ -100,14 +124,31 @@ namespace Ping_Checking_System
                 WriteListBox($"Started ICMP Trace route on {hostname}");
                 for (int ttl = 1; ttl <= max_ttl; ttl++)
                 {
+
+                if (ipTraceActive)
+                {
                     current_ttl++;
                     s1.Start();
                     s2.Start();
+                    
                     PingOptions options = new PingOptions(ttl, true);
-                    PingReply reply = null;
+                    
+                    MyPIng reply = new MyPIng();
+                    List<IPStatus> replyTestResults = new List<IPStatus>();
+
                     try
                     {
-                        reply = await pinger.SendPingAsync(hostname, timeOut, buffer, options);
+                        for(int i=0; i< accuracyLevel; i++)
+                        {
+                            PingReply replyTest = null;
+                            replyTest = await pinger.SendPingAsync(hostname, timeOut, buffer, options);
+
+                            reply.Ip = replyTest.Address.ToString();
+
+                            replyTestResults.Add(replyTest.Status);
+                            Console.WriteLine(replyTest.Address + " \t" + replyTest.Status + "\t" + s1.ElapsedMilliseconds);
+                        }
+                        reply.Status = mode(replyTestResults);
                     }
                     catch
                     {
@@ -120,7 +161,7 @@ namespace Ping_Checking_System
                         if (reply.Status == IPStatus.TtlExpired)
                         {
                             //address found after yours on the way to the destination
-                            WriteListBox($"[{ttl}] - Route: {reply.Address} - Time: {s1.ElapsedMilliseconds} ms - Total Time: {s2.ElapsedMilliseconds} ms");
+                            WriteListBox($"[{ttl}] - Route: {reply.Ip} - Time: {s1.ElapsedMilliseconds} ms - Total Time: {s2.ElapsedMilliseconds} ms");
                             continue; //continue to the other bits to find more servers
                         }
                         if (reply.Status == IPStatus.TimedOut)
@@ -139,6 +180,12 @@ namespace Ping_Checking_System
                     }
                     break;
                 }
+                else
+                {
+                    WriteListBox("Tracing Stopped! Sorry for Missing Results");
+                    break;
+                }
+                }
             
         }
 
@@ -148,7 +195,34 @@ namespace Ping_Checking_System
             listBox1.Items.Add(text);
         }
 
-        
+        private void button3_Click(object sender, EventArgs e)
+        {
+            ipTraceActive = false;
+        }
+
+        static IPStatus mode(List<IPStatus> statusList)
+        {
+            IPStatus maxValue = 0;
+            int maxCount = 0, i, j;
+
+            for (i = 0; i < statusList.Count; ++i)
+            {
+                int count = 0;
+                for (j = 0; j < statusList.Count; ++j)
+                {
+                    if (statusList[j] == statusList[i])
+                        ++count;
+                }
+
+                if (count > maxCount)
+                {
+                    maxCount = count;
+                    maxValue = statusList[i];
+                }
+            }
+            return maxValue;
+        }
+
     }
 
   
