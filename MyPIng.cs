@@ -14,7 +14,7 @@ namespace Ping_Checking_System
         IPStatus status;
 
         public string Ip { get => ip; set => ip = value; }
-        public long TimeOut { get => roundTripTime; set => roundTripTime = value; }
+        public long RoundTripTime { get => roundTripTime; set => roundTripTime = value; }
         public IPStatus Status { get => status; set => status = value; }
     }
     
