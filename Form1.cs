@@ -30,8 +30,8 @@ namespace Ping_Checking_System
         public Form1()
         {
             InitializeComponent();
-            table.Columns.Add("Reporting Time");
             table.Columns.Add("IP Address");
+            table.Columns.Add("Device Name");
             table.Columns.Add("Status");
             table.Columns.Add("RoundTripTime (ms)");
         }
@@ -70,7 +70,7 @@ namespace Ping_Checking_System
 
             Ping ping = new Ping();
 
-            for (int i = 0; i < int.Parse(textBox9.Text); i++)
+            for (int i = 0; i < accuracyLevel; i++)
             {
                 
                 PingReply pingReplyTest = await ping.SendPingAsync(ip, timeOut);
@@ -83,10 +83,23 @@ namespace Ping_Checking_System
             currentPing.Status = mode(replyTestResults);
             currentPing.RoundTripTime = currentRoundTripTime;
 
-                if (currentPing.Status == IPStatus.Success)
+            if(currentPing.Status == IPStatus.Success)
+            {
+                try
+                {
+                 // IPHostEntry hostEntry = Dns.GetHostEntry(ip);
+                 // currentPing.DeviceName = hostEntry.HostName;
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Host Name Error: " + ex);
+                }
+            }
+
+            if (currentPing.Status == IPStatus.Success)
                     countSuccess++;
 
-                table.Rows.Add(DateTime.Now.TimeOfDay, ip, currentPing.Status.ToString(), currentPing.RoundTripTime.ToString());
+                table.Rows.Add(ip, currentPing.DeviceName, currentPing.Status.ToString(), currentPing.RoundTripTime.ToString());
                 dataGridView1.DataSource = table;
                 label7.Text = "Successful Pings: " + countSuccess;
                 label10.Text = "Time Elapsed: " + ping_timeElapsed.ToString();
