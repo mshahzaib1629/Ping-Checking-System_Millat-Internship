@@ -85,24 +85,23 @@ namespace Ping_Checking_System
 
             if(currentPing.Status == IPStatus.Success)
             {
+                countSuccess++;
                 try
                 {
-                 // IPHostEntry hostEntry = Dns.GetHostEntry(ip);
-                 // currentPing.DeviceName = hostEntry.HostName;
+                 IPHostEntry hostEntry = await Dns.GetHostEntryAsync(ip);
+                 currentPing.DeviceName = hostEntry.HostName;
                 }
                 catch (Exception ex)
                 {
                     Console.WriteLine("Host Name Error: " + ex);
                 }
             }
-
-            if (currentPing.Status == IPStatus.Success)
-                    countSuccess++;
+      
 
                 table.Rows.Add(ip, currentPing.DeviceName, currentPing.Status.ToString(), currentPing.RoundTripTime.ToString());
                 dataGridView1.DataSource = table;
                 label7.Text = "Successful Pings: " + countSuccess;
-                label10.Text = "Time Elapsed: " + ping_timeElapsed.ToString();
+                label10.Text = "Time Elapsed: " + ping_timeElapsed.TotalMilliseconds.ToString();
 
                 Console.WriteLine(ip + " \t" + currentPing.Status.ToString() + " \t" + currentPing.RoundTripTime.ToString());
                 Console.WriteLine("Successful Pings: " + countSuccess);
